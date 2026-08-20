@@ -59,6 +59,10 @@ See the complete [**FACE_SR_SALVAGE_REPORT.md**](FACE_SR_SALVAGE_REPORT.md) for 
 | **Base HAT-S** | $0.0$ | **32.59 dB** | 28.70 dB | 0.6842 | Classical bicubic baseline |
 | **HAT-S Face Interp $\alpha=0.10$** | **$0.10$** | **31.97 dB** | **28.83 dB** | **0.7012** | **Beats base on mild degradation; retains clean fidelity** |
 
+### Mild Degradation (The Salvaged Model Wins)
+<img src="figures/comparison_mild_pilot.png" width="800"/>
+
+### Clean Bicubic (The "Do No Harm" Proof)
 <img src="figures/comparison_detail_zoom_65018.png" width="800"/>
 
 ## Citations
