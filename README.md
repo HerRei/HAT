@@ -22,6 +22,7 @@
 - ✅ 2023-08-01: Upload another GAN model for sharper results (Real_HAT_GAN_SRx4_sharper.pth). 
 - ✅ 2023-08-01: Upload the training configs for the **Real-World GAN-based model**.
 - ✅ 2023-09-11: Release the extended version of the paper at [Arxiv](https://arxiv.org/abs/2309.05239).
+- ✅ 2026-08-20: Release **HAT-S Face Restoration** checkpoint and [Full Postmortem & Salvage Report](FACE_SR_SALVAGE_REPORT.md).
 - **(To do)** Add the tile mode for Replicate demo. 
 - **(To do)** Update the Replicate demo for Real-World SR. 
 - **(To do)** Add HAT models for Multiple Image Restoration tasks. 
@@ -47,9 +48,18 @@
 
 <img src="https://raw.githubusercontent.com/chxy95/HAT/master/figures/Visual_Results.png" width="800"/>
 
-**Comparison with the state-of-the-art Real-SR methods.**
+## Face Restoration (HAT-S ×4)
 
-<img src="https://raw.githubusercontent.com/chxy95/HAT/master/figures/Comparison.png" width="800"/>
+A face-specialized $\times 4$ model (`HAT-S_SRx4_face_interp_a0p1.pth`) designed for portrait enhancement and real-world degradation removal without hallucinated artifacts.
+
+See the complete [**FACE_SR_SALVAGE_REPORT.md**](FACE_SR_SALVAGE_REPORT.md) for full methodology, 24-cell pilot evaluation matrix, and failure mode analysis.
+
+| Model | Blend ($\alpha$) | Clean PSNR | Mild PSNR | Hard SSIM | Key Characteristic |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **Base HAT-S** | $0.0$ | **32.59 dB** | 28.70 dB | 0.6842 | Classical bicubic baseline |
+| **HAT-S Face Interp $\alpha=0.10$** | **$0.10$** | **31.97 dB** | **28.83 dB** | **0.7012** | **Beats base on mild degradation; retains clean fidelity** |
+
+<img src="figures/comparison_detail_zoom_65018.png" width="800"/>
 
 ## Citations
 #### BibTeX

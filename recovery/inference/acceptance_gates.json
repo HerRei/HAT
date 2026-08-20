@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "gate_set_id": "face_sr_recovery_acceptance_v1",
+  "stages": {
+    "A": {
+      "gate_name": "stage_a_clean_fidelity_v1",
+      "primary_bucket": "clean",
+      "required_buckets": ["clean"],
+      "required_pair_count": 512,
+      "minimum_bootstrap_samples": 5000,
+      "required_confidence": 0.95,
+      "constraints": [
+        {"bucket": "clean", "metric": "psnr", "statistic": "mean_improvement", "direction": "higher", "threshold": 0.0},
+        {"bucket": "clean", "metric": "psnr", "statistic": "candidate_minus_baseline_ci.low", "direction": "higher", "threshold": -0.05},
+        {"bucket": "clean", "metric": "ssim", "statistic": "mean_improvement", "direction": "higher", "threshold": 0.0},
+        {"bucket": "clean", "metric": "ssim", "statistic": "candidate_minus_baseline_ci.low", "direction": "higher", "threshold": -0.0005},
+        {"bucket": "clean", "metric": "edge_correlation", "statistic": "mean_improvement", "direction": "higher", "threshold": -0.002},
+        {"bucket": "clean", "metric": "edge_correlation", "statistic": "candidate_minus_baseline_ci.low", "direction": "higher", "threshold": -0.005},
+        {"bucket": "clean", "metric": "arcface_identity_similarity", "statistic": "mean_improvement", "direction": "higher", "threshold": -0.001},
+        {"bucket": "clean", "metric": "arcface_identity_similarity", "statistic": "candidate_minus_baseline_ci.low", "direction": "higher", "threshold": -0.003}
+      ]
+    },
+    "B": {
+      "gate_name": "stage_b_mild_robustness_v1",
+      "primary_bucket": "mild",
+      "required_buckets": ["clean", "mild", "hard"],
+      "required_pair_count": 512,
+      "minimum_bootstrap_samples": 5000,
+      "required_confidence": 0.95,
+      "constraints": [
+        {"bucket": "clean", "metric": "psnr", "statistic": "mean_improvement", "direction": "higher", "threshold": -0.1},
+        {"bucket": "clean", "metric": "psnr", "statistic": "candidate_minus_baseline_ci.low", "direction": "higher", "threshold": -0.2},
+        {"bucket": "clean", "metric": "ssim", "statistic": "mean_improvement", "direction": "higher", "threshold": -0.001},
+        {"bucket": "clean", "metric": "ssim", "statistic": "candidate_minus_baseline_ci.low", "direction": "higher", "threshold": -0.002},
+        {"bucket": "clean", "metric": "arcface_identity_similarity", "statistic": "mean_improvement", "direction": "higher", "threshold": -0.002},
+        {"bucket": "clean", "metric": "arcface_identity_similarity", "statistic": "candidate_minus_baseline_ci.low", "direction": "higher", "threshold": -0.005},
+        {"bucket": "mild", "metric": "psnr", "statistic": "mean_improvement", "direction": "higher", "threshold": 0.1},
+        {"bucket": "mild", "metric": "psnr", "statistic": "candidate_minus_baseline_ci.low", "direction": "higher", "threshold": 0.0},
+        {"bucket": "mild", "metric": "ssim", "statistic": "mean_improvement", "direction": "higher", "threshold": 0.001},
+        {"bucket": "mild", "metric": "ssim", "statistic": "candidate_minus_baseline_ci.low", "direction": "higher", "threshold": 0.0},
+        {"bucket": "mild", "metric": "edge_correlation", "statistic": "mean_improvement", "direction": "higher", "threshold": 0.005},
+        {"bucket": "mild", "metric": "edge_correlation", "statistic": "candidate_minus_baseline_ci.low", "direction": "higher", "threshold": 0.0},
+        {"bucket": "mild", "metric": "arcface_identity_similarity", "statistic": "mean_improvement", "direction": "higher", "threshold": 0.0},
+        {"bucket": "mild", "metric": "arcface_identity_similarity", "statistic": "candidate_minus_baseline_ci.low", "direction": "higher", "threshold": -0.002},
+        {"bucket": "hard", "metric": "psnr", "statistic": "mean_improvement", "direction": "higher", "threshold": 0.05},
+        {"bucket": "hard", "metric": "psnr", "statistic": "candidate_minus_baseline_ci.low", "direction": "higher", "threshold": -0.05},
+        {"bucket": "hard", "metric": "ssim", "statistic": "mean_improvement", "direction": "higher", "threshold": 0.0005},
+        {"bucket": "hard", "metric": "ssim", "statistic": "candidate_minus_baseline_ci.low", "direction": "higher", "threshold": -0.0005},
+        {"bucket": "hard", "metric": "edge_correlation", "statistic": "mean_improvement", "direction": "higher", "threshold": 0.002},
+        {"bucket": "hard", "metric": "edge_correlation", "statistic": "candidate_minus_baseline_ci.low", "direction": "higher", "threshold": -0.002},
+        {"bucket": "hard", "metric": "arcface_identity_similarity", "statistic": "mean_improvement", "direction": "higher", "threshold": -0.001},
+        {"bucket": "hard", "metric": "arcface_identity_similarity", "statistic": "candidate_minus_baseline_ci.low", "direction": "higher", "threshold": -0.003}
+      ]
+    }
+  }
+}

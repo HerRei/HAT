@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+    "updated_at_local": "2026-08-20T14:51:18+02:00",
+  "repository_commit": "1638a9a822581657811867bf670717f8371fc3e5",
+  "environment": {
+    "python": "3.13.13",
+    "pytorch": "2.9.1+rocm6.3",
+    "torchvision": "0.24.1+rocm6.3",
+    "basicsr": "1.4.2",
+    "pip_freeze_sha256": "9df8efd19705afc16fb9a4908a1a6a93120288794ac92a70005981c16368e853"
+  },
+  "hardware": {
+    "gpu": "AMD Radeon RX 9060 XT",
+    "vram_bytes": 17095983104,
+    "cpu": "Intel Core Ultra 7 270K Plus",
+    "ram_approx_gib": 31
+  },
+  "failed_run": {
+    "experiment": "HAT-S_SRx4_face_finetune_v2",
+    "stopped_gracefully": true,
+    "restart_incident": {
+      "automatic_restart_pid": 909702,
+      "controller_pid": 7333,
+      "controller_terminated": true,
+      "parent_shell_preserved": true,
+      "additional_checkpoint_created": false
+    },
+    "latest_complete_iteration": 130000,
+    "artifacts": {
+      "base_generator": {
+        "path": "experiments/pretrained_models/HAT-S_SRx4.pth",
+        "sha256": "a92f81bd2c0c1aaa371a6e4d6cac69e749fde2e36196885ee47a4a3667542c9a"
+      },
+      "generator_85000": {
+        "path": "experiments/HAT-S_SRx4_face_finetune_v2/models/net_g_85000.pth",
+        "sha256": "731f69ae13276af6d172cdc00b699ab7e2bc92c253b3db77ff1c2577d796d1e1"
+      },
+      "generator_95000": {
+        "path": "experiments/HAT-S_SRx4_face_finetune_v2/models/net_g_95000.pth",
+        "sha256": "14d7828b4ce821ff9325501c6af16a52c1cf3c48a5b308906d379f79fe25e18f"
+      },
+      "generator_125000": {
+        "path": "experiments/HAT-S_SRx4_face_finetune_v2/models/net_g_125000.pth",
+        "sha256": "6e991029bb582126b90e5b6d9d331c4bc1178a1c804c3180a0ea931b238f4cbf"
+      },
+      "generator_130000": {
+        "path": "experiments/HAT-S_SRx4_face_finetune_v2/models/net_g_130000.pth",
+        "sha256": "55ad8ca39efb8d34cec5341168bd223cf7eea6c8ee04e50643cef304e41cf222"
+      },
+      "discriminator_130000": {
+        "path": "experiments/HAT-S_SRx4_face_finetune_v2/models/net_d_130000.pth",
+        "sha256": "88924b9b2cd8120ccac73e34d0aa1837f2c3036cca5605ce339ab07829d27001"
+      },
+      "training_state_130000": {
+        "path": "experiments/HAT-S_SRx4_face_finetune_v2/training_states/130000.state",
+        "sha256": "ab7d559fd22e158d870d0324255d1f98c9066884521acc56626b5646fe173b1c"
+      }
+    }
+  },
+    "workflow": {
+        "current_phase": "deterministic_data_build",
+        "gpu_job_active": false,
+        "active_cpu_job": {
+            "pid_at_launch": 918016,
+            "started_at_local": "2026-08-20T14:47:05+02:00",
+            "command": "/home/hermes/hat-face-training/hat-face/bin/python recovery/data/build_recovery_data.py build --workers 8",
+            "builder_sha256": "83d64a24f70b4e2b585f8aefbfe0caed0ff142a0a361bd46f1f7f8469f8594ce",
+            "output_root": "/home/hermes/hat-face-training/data/face_sr_recovery"
+        },
+        "arcface_identity_model": {
+            "path": "/home/hermes/hat-face-training/models/metrics/recognition_arcface_ir_se50.pth",
+            "sha256": "a035c768259b98ab1ce0e646312f48b9e1e218197a0f80ac6765e88f8b6ddf28",
+            "source": "https://github.com/xinntao/facexlib/releases/download/v0.1.0/recognition_arcface_ir_se50.pth"
+        },
+        "tests": {
+            "recovery_unittest_count": 15,
+            "recovery_unittest_status": "passed",
+            "static_config_test_count": 6,
+            "static_config_status": "passed_with_data_existence_check_skipped_until_build"
+        },
+        "next_required_gate": "data_build_and_recompute_verification"
+    }
+}

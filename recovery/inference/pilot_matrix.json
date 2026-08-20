@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "matrix_id": "face_sr_recovery_pilot_v1",
+  "expected_count_per_dataset": 512,
+  "checkpoint_param_key": "params_ema",
+  "data_root": "/home/hermes/hat-face-training/data/face_sr_recovery",
+  "template": "options/test/recovery/pilot_template.yml",
+  "models": [
+    {
+      "id": "base",
+      "checkpoint": "experiments/pretrained_models/HAT-S_SRx4.pth",
+      "sha256": "a92f81bd2c0c1aaa371a6e4d6cac69e749fde2e36196885ee47a4a3667542c9a"
+    },
+    {
+      "id": "face85k",
+      "checkpoint": "experiments/HAT-S_SRx4_face_finetune_v2/models/net_g_85000.pth",
+      "sha256": "731f69ae13276af6d172cdc00b699ab7e2bc92c253b3db77ff1c2577d796d1e1"
+    },
+    {
+      "id": "face95k",
+      "checkpoint": "experiments/HAT-S_SRx4_face_finetune_v2/models/net_g_95000.pth",
+      "sha256": "14d7828b4ce821ff9325501c6af16a52c1cf3c48a5b308906d379f79fe25e18f"
+    },
+    {
+      "id": "face125k",
+      "checkpoint": "experiments/HAT-S_SRx4_face_finetune_v2/models/net_g_125000.pth",
+      "sha256": "6e991029bb582126b90e5b6d9d331c4bc1178a1c804c3180a0ea931b238f4cbf"
+    },
+    {
+      "id": "face130k",
+      "checkpoint": "experiments/HAT-S_SRx4_face_finetune_v2/models/net_g_130000.pth",
+      "sha256": "55ad8ca39efb8d34cec5341168bd223cf7eea6c8ee04e50643cef304e41cf222"
+    },
+    {
+      "id": "interp_a0p1",
+      "checkpoint": "experiments/face_sr_recovery_interpolations/base_95k_interp_a0p1.pth",
+      "sha256": "92277daf002214307bea6f1e06b4fa745acdb7690728a0a9a619076e7bc8d7f2"
+    },
+    {
+      "id": "interp_a0p25",
+      "checkpoint": "experiments/face_sr_recovery_interpolations/base_95k_interp_a0p25.pth",
+      "sha256": "27ef8c9bc595af9c8b188e5ae383523230b298979a66a2908c4195904268e8bf"
+    },
+    {
+      "id": "interp_a0p5",
+      "checkpoint": "experiments/face_sr_recovery_interpolations/base_95k_interp_a0p5.pth",
+      "sha256": "1c7cfa58a4dbdb22666ecd6278a8a6353491bf5595762e7ff3ecd06b8e8e433d"
+    }
+  ],
+  "datasets": [
+    {
+      "id": "clean",
+      "name": "face_recovery_clean_pilot",
+      "root": "benchmarks/clean_pilot",
+      "manifest": "manifests/clean_pilot.jsonl"
+    },
+    {
+      "id": "mild",
+      "name": "face_recovery_mild_pilot",
+      "root": "benchmarks/mild_pilot",
+      "manifest": "manifests/mild_pilot.jsonl"
+    },
+    {
+      "id": "hard",
+      "name": "face_recovery_hard_pilot",
+      "root": "benchmarks/hard_pilot",
+      "manifest": "manifests/hard_pilot.jsonl"
+    }
+  ]
+}
+

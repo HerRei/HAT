@@ -4,6 +4,7 @@ results/*
 tb_logger/*
 wandb/*
 tmp/*
+recovery/runs/
 modify_model.py
 hat/version.py
 

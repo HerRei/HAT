@@ -1,0 +1,162 @@
+# Stage C is optional and must never be launched automatically. Replace the
+# checkpoint sentinel only after Stage B passes its fidelity and identity gates.
+name: recovery_stage_c_weak_perceptual_5k_opt_in
+model_type: SRGANModel
+scale: 4
+num_gpu: 1
+manual_seed: 20260820
+auto_resume: false
+
+recovery_contract:
+  stage: C
+  purpose: optional_perceptual_specialist
+  enabled_by_default: false
+  requires_accepted_checkpoint: stage_b
+  clean_dataset_fraction: 0.5
+  evaluation_gate_status: blocked
+  blocked_until:
+    - pinned_lpips_or_dists
+    - blinded_visual_protocol
+  decision_iter: 5000
+
+datasets:
+  train:
+    name: FaceRecoveryMildMixedTrain50Clean
+    type: PairedImageDataset
+    dataroot_gt: /home/hermes/hat-face-training/data/face_sr_recovery/mild_mixed/train/gt
+    dataroot_lq: /home/hermes/hat-face-training/data/face_sr_recovery/mild_mixed/train/lq
+    meta_info_file: /home/hermes/hat-face-training/data/face_sr_recovery/mild_mixed/train/meta_info.txt
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+    gt_size: 256
+    use_hflip: true
+    use_rot: false
+    use_shuffle: true
+    num_worker_per_gpu: 2
+    batch_size_per_gpu: 2
+    dataset_enlarge_ratio: 1
+    prefetch_mode: ~
+
+  val_clean:
+    name: FaceRecoveryCleanPilot
+    type: PairedImageDataset
+    dataroot_gt: /home/hermes/hat-face-training/data/face_sr_recovery/benchmarks/clean_pilot/gt
+    dataroot_lq: /home/hermes/hat-face-training/data/face_sr_recovery/benchmarks/clean_pilot/lq
+    meta_info_file: /home/hermes/hat-face-training/data/face_sr_recovery/benchmarks/clean_pilot/meta_info.txt
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+
+  val_mild:
+    name: FaceRecoveryMildPilot
+    type: PairedImageDataset
+    dataroot_gt: /home/hermes/hat-face-training/data/face_sr_recovery/benchmarks/mild_pilot/gt
+    dataroot_lq: /home/hermes/hat-face-training/data/face_sr_recovery/benchmarks/mild_pilot/lq
+    meta_info_file: /home/hermes/hat-face-training/data/face_sr_recovery/benchmarks/mild_pilot/meta_info.txt
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+
+network_g:
+  type: HAT
+  upscale: 4
+  in_chans: 3
+  img_size: 64
+  window_size: 16
+  compress_ratio: 24
+  squeeze_factor: 24
+  conv_scale: 0.01
+  overlap_ratio: 0.5
+  img_range: 1.0
+  depths: [6, 6, 6, 6, 6, 6]
+  embed_dim: 144
+  num_heads: [6, 6, 6, 6, 6, 6]
+  mlp_ratio: 2
+  upsampler: pixelshuffle
+  resi_connection: 1conv
+
+network_d:
+  type: UNetDiscriminatorSN
+  num_in_ch: 3
+  num_feat: 64
+  skip_connection: true
+
+path:
+  # Intentionally nonexistent. Supply an accepted Stage B net_g checkpoint.
+  pretrain_network_g: /home/hermes/hat-face-training/HAT/experiments/__ACCEPTED_STAGE_B__/models/net_g_10000.pth
+  param_key_g: params_ema
+  strict_load_g: true
+  pretrain_network_d: ~
+  resume_state: ~
+
+train:
+  ema_decay: 0.999
+  optim_g:
+    type: Adam
+    lr: !!float 5e-6
+    weight_decay: 0
+    betas: [0.9, 0.99]
+  optim_d:
+    type: Adam
+    lr: !!float 1e-5
+    weight_decay: 0
+    betas: [0.9, 0.99]
+  scheduler:
+    type: MultiStepLR
+    milestones: [4000]
+    gamma: 0.5
+  total_iter: 5000
+  warmup_iter: -1
+  pixel_opt:
+    type: L1Loss
+    loss_weight: 1.0
+    reduction: mean
+  perceptual_opt:
+    type: PerceptualLoss
+    layer_weights:
+      conv1_2: 0.1
+      conv2_2: 0.1
+      conv3_4: 1.0
+      conv4_4: 1.0
+      conv5_4: 1.0
+    vgg_type: vgg19
+    use_input_norm: true
+    perceptual_weight: 0.05
+    style_weight: 0
+    range_norm: false
+    criterion: l1
+  gan_opt:
+    type: GANLoss
+    gan_type: vanilla
+    real_label_val: 1.0
+    fake_label_val: 0.0
+    loss_weight: 0.005
+  net_d_iters: 1
+  net_d_init_iters: 0
+
+val:
+  val_freq: 500
+  save_img: false
+  pbar: false
+  metrics:
+    psnr:
+      type: calculate_psnr
+      crop_border: 4
+      test_y_channel: true
+    ssim:
+      type: calculate_ssim
+      crop_border: 4
+      test_y_channel: true
+
+logger:
+  print_freq: 100
+  save_checkpoint_freq: 500
+  use_tb_logger: true
+  wandb:
+    project: ~
+    resume_id: ~
+
+dist_params:
+  backend: gloo
+  port: 29500
