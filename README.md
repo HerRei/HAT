@@ -131,3 +131,9 @@ The inference results on benchmark datasets are available at
 
 ## Contact
 If you have any question, please email chxy95@gmail.com or join in the [Wechat group of BasicSR](https://github.com/XPixelGroup/BasicSR#-contact) to discuss with the authors.
+
+## License & Attribution
+
+- The **HAT code and architecture** remain open-source under the original [Apache License 2.0](LICENSE) by XPixel Group.
+- The **HAT-S Face Restoration Weights** (`HAT-S_SRx4_face_interp_a0p1.pth` / `base_95k_interp_a0p1.pth`) were fine-tuned using the [Flickr-Faces-HQ (FFHQ) Dataset](https://github.com/NVlabs/ffhq-dataset). Because the FFHQ dataset is licensed by NVIDIA Corporation under a **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License**, these fine-tuned model weights inherit the same restrictions. 
+- You may use these weights for personal and research purposes, but **commercial use is strictly prohibited**.
