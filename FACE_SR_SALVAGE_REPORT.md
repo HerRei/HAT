@@ -5,6 +5,17 @@
 **Repository:** [HerRei/HAT](https://github.com/HerRei/HAT)  
 **Target Model:** HAT-S $\times 4$ Face-Specialized Super-Resolution  
 
+## September 2026 clarification
+
+This historical report documents the HAT-S experiment. The selected checkpoint
+loses 0.62 dB on clean inputs and gains 0.13 dB on mildly degraded faces. PSNR is
+logarithmic: dividing PSNR values does not measure a percentage of retained
+fidelity. Neither these metrics nor interpolation establishes zero hallucination
+or preserved identity. The existing release does not establish checkpoint rights;
+LocalSR accepts only a verified user-supplied copy with unresolved-rights labelling.
+See the [current HAT-S card](docs/models/hat-s-face.md) and
+[completed HAT-L selection](docs/models/hat-l-face.md).
+
 ---
 
 ## 1. Executive Summary
@@ -13,7 +24,7 @@ This report documents the full postmortem, deterministic multi-bucket recovery e
 
 * **The Problem:** Direct fine-tuning of pre-trained HAT-S on face datasets using an aggressive GAN + VGG perceptual objective ($10^{-4}$ learning rate, zero clean replay) caused a catastrophic $\sim 4.4\text{ dB}$ PSNR drop on clean bicubic faces, producing high-frequency hallucinations and edge-correlation collapse ($0.868 \rightarrow 0.729$).
 * **The Recovery Method:** We engineered an immutable, deterministic 3-bucket pilot benchmark (**Clean**, **Mild**, and **Hard** degradation) across 512 held-out validation faces, evaluating all preserved checkpoints (85K, 95K, 125K, 130K) and linear EMA weight interpolations ($\alpha = 0.10, 0.25, 0.50$).
-* **The Salvaged Checkpoint:** **`HAT-S_SRx4_face_interp_a0p1.pth`** ($\alpha = 0.10$, blending 90% base ImageNet weights with 10% face-specialized 95K weights) successfully **beats the base HAT-S model on mild face degradation ($28.83\text{ dB}$ vs $28.70\text{ dB}$)** while **retaining $98\%$ of clean bicubic fidelity ($31.97\text{ dB}$, only $0.62\text{ dB}$ below base)**.
+* **The Salvaged Checkpoint:** **`HAT-S_SRx4_face_interp_a0p1.pth`** ($\alpha = 0.10$, blending 90% stock HAT-S weights with 10% face-specialized 95K weights) successfully **beats the base HAT-S model on mild face degradation ($28.83\text{ dB}$ vs $28.70\text{ dB}$)** with **clean PSNR of $31.97\text{ dB}$, $0.62\text{ dB}$ below base**.
 * **The Deployment Model:** This salvaged checkpoint is integrated as the official lightweight face model in [`local-upscale`](https://github.com/HerRei/local-upscale) paired with general HAT-S for face-aware video and photo restoration.
 
 ---
@@ -35,7 +46,7 @@ Evaluated across the 512-image deterministic pilot benchmarks on an AMD Radeon R
 
 ### Key Findings
 1. **The 4.4 dB Clean Collapse:** All raw GAN checkpoints suffered an immediate $\approx 4.4\text{ dB}$ clean degradation because the discriminator rewarded plausible-looking high-frequency texture synthesis over pixel-accurate reconstruction.
-2. **Mild Degradation Win:** `interp_a0p1` is the single candidate that surpasses base HAT-S on mild degradation ($+0.13\text{ dB}$ gain, $+0.0159$ SSIM gain) while preventing clean hallucination.
+2. **Mild Degradation Win:** `interp_a0p1` is the single candidate that surpasses base HAT-S on mild degradation ($+0.13\text{ dB}$ gain, $+0.0159$ SSIM gain) with a smaller clean-image regression.
 3. **Hard Degradation Feature Retention:** `interp_a0p5` achieves the highest hard degradation SSIM ($0.7212$ vs $0.6842$), proving that the fine-tuned weights learned genuine blind noise/blur inversion features that can be recovered through linear weight interpolation.
 
 ---
@@ -44,7 +55,7 @@ Evaluated across the 512-image deterministic pilot benchmarks on an AMD Radeon R
 
 ### Detailed Crop Comparison (Clean Bicubic Benchmark)
 ![Detail Zoom Comparison](figures/comparison_detail_zoom_65018.png)
-*Figure 1: Close-up comparison of eye, eyelash, and skin texture on Clean Bicubic input (ID: 65018). Raw Face95k introduces synthetic noisy artifacts around the eyelids, whereas `interp_a0p1` preserves natural clarity identical to base HAT-S.*
+*Figure 1: Close-up comparison of eye, eyelash, and skin texture on Clean Bicubic input (ID: 65018). Raw Face95k introduces synthetic noisy artifacts around the eyelids, whereas `interp_a0p1` reduces the visible artifacts of the raw face checkpoint; it is not identical to base HAT-S.*
 
 ### Clean Pilot Benchmark Comparison
 ![Clean Pilot Grid](figures/comparison_clean_pilot.png)
@@ -80,4 +91,4 @@ The official salvaged model weights are released under GitHub Releases:
 2. **Conservative Learning Rate ($10^{-5}$):** Transformers require low learning rates ($10^{-5}$ with MultiStep decay down to $1.25 \times 10^{-6}$) during domain specialization to prevent catastrophic representation drift.
 3. **Mandatory Clean Replay ($15–20\%$):** Training datasets must interleave at least $15–20\%$ clean bicubic downscaled pairs to maintain anchor fidelity on high-quality source media.
 
-These lessons are fully integrated into the upcoming **HAT-L 21-Day Holiday Recipe** in [`HAT-Face-Finetune`](https://github.com/HerRei/HAT-Face-Finetune).
+These lessons are fully integrated into the **HAT-L 21-Day Holiday Recipe** in [`HAT-Face-Finetune`](https://github.com/HerRei/HAT-Face-Finetune).

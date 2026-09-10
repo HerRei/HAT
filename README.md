@@ -12,6 +12,7 @@
 [Xiangyu Chen](https://chxy95.github.io/), [Xintao Wang](https://xinntao.github.io/), [Wenlong Zhang](https://wenlongzhang0517.github.io/), [Xiangtao Kong](https://xiangtaokong.github.io/), [Jiantao Zhou](https://www.fst.um.edu.mo/personal/jtzhou/), [Yu Qiao](https://scholar.google.com.hk/citations?user=gFtI-8QAAAAJ) and [Chao Dong](https://scholar.google.com.hk/citations?user=OSDCB0UAAAAJ&hl=zh-CN)
 
 ## Updates
+- 2026-09-10: Document both face interpolations and complete their LocalSR companion integration on a separate later-release branch. [Model cards](docs/models/hat-l-face.md); no new weight publication.
 - ✅ 2022-05-09: Release the first version of the paper at Arxiv.
 - ✅ 2022-05-20: Release the codes, models and results of HAT.
 - ✅ 2022-08-29: Add a Replicate demo for SRx4.
@@ -48,21 +49,41 @@
 
 <img src="https://raw.githubusercontent.com/chxy95/HAT/master/figures/Visual_Results.png" width="800"/>
 
-## Face Restoration (HAT-S ×4)
+## Face restoration experiments (HAT-S and HAT-L ×4)
 
-A face-specialized $\times 4$ model (`HAT-S_SRx4_face_interp_a0p1.pth`) designed for portrait enhancement and real-world degradation removal without hallucinated artifacts.
+Two face-specialized ×4 checkpoints are supported by LocalSR's separate
+`codex/hat-face-models` integration branch for a later release. Stock HAT remains
+the general-purpose choice. Each face variant pairs with its own stock model.
+
+| Variant | Selected blend | Exact file | Size |
+| --- | --- | --- | ---: |
+| [HAT-S Face](docs/models/hat-s-face.md) | 90% stock + 10% face95k | `base_95k_interp_a0p1.pth` | 40,484,805 bytes |
+| [HAT-L Face](docs/models/hat-l-face.md) | 75% stock ImageNet + 25% face run3 | `hat_l_x4_face_task4.pth` | 165,676,233 bytes |
+
+Both remain **Labs / verified user-supplied import only** in LocalSR. Training-data
+and checkpoint rights are unresolved; no commercial-use claim is made. HAT-L
+weights remain unpublished. See [checkpoint terms](docs/checkpoint-rights.md) and
+the [public model study](https://herrei.github.io/localsr/models/).
+
+HAT-L's three L1-only stages plateaued; interpolation extracted measured face
+recovery gains. The selected α=0.25 blend reports clean −0.19 dB, mild +0.44 dB,
+and hard +0.25 dB against stock HAT-L on its 512-image recovery buckets. The
+perceptual detail stage was not launched. These separate experiment reports do
+not establish a controlled comparison between HAT-S and HAT-L.
+
+The following HAT-S measurements are retained from the recovery report:
 
 See the complete [**FACE_SR_SALVAGE_REPORT.md**](FACE_SR_SALVAGE_REPORT.md) for full methodology, 24-cell pilot evaluation matrix, and failure mode analysis.
 
 | Model | Blend ($\alpha$) | Clean PSNR | Mild PSNR | Hard SSIM | Key Characteristic |
 | :--- | :---: | :---: | :---: | :---: | :--- |
 | **Base HAT-S** | $0.0$ | **32.59 dB** | 28.70 dB | 0.6842 | Classical bicubic baseline |
-| **HAT-S Face Interp $\alpha=0.10$** | **$0.10$** | **31.97 dB** | **28.83 dB** | **0.7012** | **Beats base on mild degradation; retains clean fidelity** |
+| **HAT-S Face Interp $\alpha=0.10$** | **$0.10$** | **31.97 dB** | **28.83 dB** | **0.7012** | **Mild +0.13 dB; clean −0.62 dB** |
 
 ### Mild Degradation (The Salvaged Model Wins)
 <img src="figures/comparison_mild_pilot.png" width="800"/>
 
-### Clean Bicubic (The "Do No Harm" Proof)
+### Clean bicubic trade-off
 <img src="figures/comparison_detail_zoom_65018.png" width="800"/>
 
 ## Citations
