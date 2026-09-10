@@ -95,3 +95,20 @@ It does not change the ongoing v0.0.12-alpha release or its installer assets.
 The catalog reserves a `v1.0.1-hat-l-face` asset URL, but that release does not exist
 and is not an available download. The URL is never used for automatic acquisition.
 No HAT-L weights are published by this integration; the established rights policy remains.
+
+## HDR video in LocalSR Next Preview
+
+The isolated LocalSR HDR preview supports float32 processing and 10-bit HLG/PQ
+HEVC export using this checkpoint. It constrains the model’s added detail to
+the source’s mean linear BT.2020 RGB per expanded pixel. The checkpoint itself
+remains SDR-trained: HDR perceptual quality, block-boundary detail and temporal
+stability are unverified. This is a Labs adapter, not new HDR training.
+
+Bounded local MPS inference passed for HLG and PQ with the exact selected file;
+these functional checks do not replace the SDR selection evidence above.
+Thumbnails are SDR display previews. Dolby Vision dynamic metadata is omitted.
+See [LocalSR preview notes](https://herrei.github.io/localsr/preview/) for output
+modes, limits and availability. The changes are prepared separately from v0.0.12.
+
+LocalSR’s selectable CPU/GPU speed benchmark uses the fixed SPAN workload,
+not this HAT checkpoint; its render tiles are a processing visualization.

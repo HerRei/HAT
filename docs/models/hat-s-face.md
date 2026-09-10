@@ -39,3 +39,20 @@ commercial-use claim. The pre-existing HAT-S release is a provenance reference;
 its existence does not establish checkpoint or training-data rights. Import a copy
 only where you are independently permitted to use it. See [license notes](../checkpoint-rights.md)
 and the [HAT-L model card](hat-l-face.md).
+
+## HDR video in LocalSR Next Preview
+
+The isolated LocalSR HDR preview supports float32 processing and 10-bit HLG/PQ
+HEVC export using this checkpoint. It constrains the model’s added detail to
+the source’s mean linear BT.2020 RGB per expanded pixel. The checkpoint itself
+remains SDR-trained: HDR perceptual quality, block-boundary detail and temporal
+stability are unverified. This is a Labs adapter, not new HDR training.
+
+Bounded local MPS inference passed for HLG and PQ with the exact selected file;
+these functional checks do not replace the SDR selection evidence above.
+Thumbnails are SDR display previews. Dolby Vision dynamic metadata is omitted.
+See [LocalSR preview notes](https://herrei.github.io/localsr/preview/) for output
+modes, limits and availability. The changes are prepared separately from v0.0.12.
+
+LocalSR’s selectable CPU/GPU speed benchmark uses the fixed SPAN workload,
+not this HAT checkpoint; its render tiles are a processing visualization.
